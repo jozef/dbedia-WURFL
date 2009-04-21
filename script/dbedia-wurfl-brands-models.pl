@@ -20,11 +20,27 @@ use File::Spec;
 use FindBin '$Bin';
 use Pod::Usage;
 use Mobile::Devices;
-use Mobile::Devices::IDs;
+use JSON::XS;
+use Getopt::Long;
+use Pod::Usage;
 
 exit main();
 
 sub main {
+    my $help;
+    my $lib;
+    GetOptions(
+        'help|h'  => \$help,
+        'lib|l=s' => \$lib,
+    ) or pod2usage;
+    pod2usage if $help;
+    
+    unshift(@INC, $lib)
+        if defined $lib;
+    
+    eval 'use Mobile::Devices::IDs';
+    die $@ if $@;
+    
     my $ids = Mobile::Devices::IDs->all;
     my $devices = Mobile::Devices->new();
     
@@ -47,7 +63,7 @@ sub main {
             }
         }
     }
-    use Data::Dumper; print "dump> ", Dumper(\%brands), "\n";
+    print JSON::XS->new->utf8->pretty(1)->encode(\%brands);
 
     return 0;
 }
