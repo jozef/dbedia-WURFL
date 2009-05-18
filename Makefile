@@ -32,6 +32,10 @@ ${WURFL_XML}:
 	mobile-devices-fresh-wurfl.pl --lib ${TMP_LIB_FOLDER}
 
 # CLEAN
-.PHONY: .clean
+.PHONY: clean distclean
 clean:
+	rm -f ${WURFL_XML}
+
+distclean:
 	rm -rf tmp/*
+	rm -rf output/*

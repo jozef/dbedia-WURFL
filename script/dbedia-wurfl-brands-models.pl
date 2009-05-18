@@ -23,7 +23,7 @@ use Mobile::Devices;
 use JSON::XS;
 use Getopt::Long;
 use Pod::Usage;
-use List::MoreUtils 'any';
+use List::Util 'first';
 
 exit main();
 
@@ -58,12 +58,14 @@ sub main {
         $brands{$brand_name} ||= [];
         
         # skip already seen models
-        next
-            if any { $_->{'model_name'} eq $model_name  } @{$brands{$brand_name}};
+        if (my $record = first { $_->{'model_name'} eq $model_name  } @{$brands{$brand_name}}) {
+            push @{$record->{'id'}}, $id;
+            next;
+        }
         
         # add model
         push @{$brands{$brand_name}}, {
-            'id'             => $id,
+            'id'             => [ $id ],
             'model_name'     => $device->model_name,
             (
                 $device->release_date
