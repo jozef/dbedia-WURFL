@@ -5,12 +5,12 @@ WURFL_XML=${WURFL_LIB_FOLDER}/wurfl.xml
 OUTPUT_FOLDER=output
 
 # ALL
-all: ${WURFL_XML} ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm ${OUTPUT_FOLDER}/brandsModels.json ${OUTPUT_FOLDER}/byID/IDs.json
+all: ${WURFL_XML} ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm ${OUTPUT_FOLDER}/brandsModels.json ${OUTPUT_FOLDER}/IDs.json
 
 # WURFL byID JSON
-${OUTPUT_FOLDER}/byID/IDs.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
-	mkdir -p ${OUTPUT_FOLDER}/byID
-	script/dbedia-wurfl-byid.pl --lib tmp/lib --folder output/byID
+${OUTPUT_FOLDER}/IDs.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
+	mkdir -p ${OUTPUT_FOLDER}
+	script/dbedia-wurfl-byid.pl --lib tmp/lib --folder output
 
 # WURFL brands&models JSON
 ${OUTPUT_FOLDER}/brandsModels.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm

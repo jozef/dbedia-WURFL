@@ -58,7 +58,7 @@ sub main {
         # skip devices without brand_name
         next if not $brand_name;
         
-        my $device_folder   = File::Spec->catdir($folder, $brand_name);
+        my $device_folder   = File::Spec->catdir($folder, 'byID', $brand_name);
         my $device_filename = File::Spec->catfile($device_folder, $device->wurfl_id.'.json');
         
         mkpath($device_folder)
@@ -72,6 +72,12 @@ sub main {
     write_file(
         File::Spec->catfile($folder, 'IDs.json'),
         JSON::XS->new->utf8->pretty(1)->encode([ sort @generated_devices ]),
+    );
+
+    my $generic = $devices->search( 'id' => 'generic' );
+    write_file(
+        File::Spec->catfile($folder, 'grpCap.json'),
+        JSON::XS->new->utf8->pretty(1)->encode($generic->group_capabilities),
     );
 
     return 0;

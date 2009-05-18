@@ -23,6 +23,7 @@ use Mobile::Devices;
 use JSON::XS;
 use Getopt::Long;
 use Pod::Usage;
+use List::MoreUtils 'any';
 
 exit main();
 
@@ -48,20 +49,33 @@ sub main {
     foreach my $id (@{$ids}) {
         my $device = $devices->search( 'id' => $id );
         
-        if (my $brand_name = $device->brand_name) {
-            $brands{$brand_name} ||= [];
-            if ($device->model_name) {
-                push @{$brands{$brand_name}}, {
-                    'id'             => $id,
-                    'model_name'     => $device->model_name,
-                    (
-                        $device->marketing_name
-                        ? ('marketing_name' => $device->marketing_name)
-                        : ()
-                    )
-                };
-            }
-        }
+        # only interested in devices that have brand and model names set
+        my $brand_name = $device->brand_name;
+        next if not $brand_name;
+        my $model_name = $device->model_name;
+        next if not $model_name;
+        
+        $brands{$brand_name} ||= [];
+        
+        # skip already seen models
+        next
+            if any { $_->{'model_name'} eq $model_name  } @{$brands{$brand_name}};
+        
+        # add model
+        push @{$brands{$brand_name}}, {
+            'id'             => $id,
+            'model_name'     => $device->model_name,
+            (
+                $device->release_date
+                ? ('release_date' => $device->release_date)
+                : ()
+            ),
+            (
+                $device->marketing_name
+                ? ('marketing_name' => $device->marketing_name)
+                : ()
+            )
+        };
     }
     print JSON::XS->new->utf8->pretty(1)->encode(\%brands);
 
