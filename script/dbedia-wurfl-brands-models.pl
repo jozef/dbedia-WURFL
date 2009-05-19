@@ -24,15 +24,19 @@ use JSON::XS;
 use Getopt::Long;
 use Pod::Usage;
 use List::Util 'first';
+use File::Slurp 'write_file';
+use File::Path 'mkpath';
 
 exit main();
 
 sub main {
     my $help;
     my $lib;
+    my $folder;
     GetOptions(
         'help|h'  => \$help,
         'lib|l=s' => \$lib,
+        'folder|f=s' => \$folder,
     ) or pod2usage;
     pod2usage if $help;
     
@@ -79,7 +83,31 @@ sub main {
             )
         };
     }
-    print JSON::XS->new->utf8->pretty(1)->encode(\%brands);
+    write_file(
+        File::Spec->catfile($folder, 'brandsModels.json'),
+        JSON::XS->new->utf8->pretty(1)->encode(\%brands),
+    );
+    
+    write_file(
+        File::Spec->catfile($folder, 'brands.json'),
+        JSON::XS->new->utf8->pretty(1)->encode([ sort keys %brands ]),
+    );    
+    
+    foreach my $brand_name (keys %brands) {
+        my $brand_folder    = File::Spec->catdir($folder, 'byBrand', $brand_name);
+        my $models_filename = File::Spec->catfile($brand_folder, 'models.json');
+        
+        mkpath($brand_folder)
+            if not -e $brand_folder;
+        
+        my %models =
+            map { delete $_->{'model_name'} => $_ }
+            @{$brands{$brand_name}};
+        write_file(
+            $models_filename,
+            JSON::XS->new->utf8->pretty(1)->encode(\%models)
+        );
+    }
 
     return 0;
 }

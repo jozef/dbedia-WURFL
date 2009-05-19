@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-dbedia-wurfl-byid.pl - generate handsets info by id
+dbedia-wurfl-bybrand.pl - generate handsets info by id
 
 =head1 SYNOPSIS
 
-    dbedia-wurfl-byid.pl
+    dbedia-wurfl-bybrand.pl
 
 =head1 DESCRIPTION
 
@@ -58,7 +58,7 @@ sub main {
         # skip devices without brand_name
         next if not $brand_name;
         
-        my $device_folder   = File::Spec->catdir($folder, 'byID', $brand_name);
+        my $device_folder   = File::Spec->catdir($folder, 'byBrand', $brand_name);
         my $device_filename = File::Spec->catfile($device_folder, $device->wurfl_id.'.json');
         
         mkpath($device_folder)

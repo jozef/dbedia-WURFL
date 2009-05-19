@@ -16,16 +16,15 @@ install: all
 	mkdir -p ${DESTDIR}/etc/dbedia/sites-available
 	cp etc/dbedia-WURFL.conf ${DESTDIR}/etc/dbedia/sites-available/
 
-# WURFL byID JSON
+# WURFL byBrand JSON
 ${WWW_FOLDER}/IDs.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
 	mkdir -p ${WWW_FOLDER}
-	script/dbedia-wurfl-byid.pl --lib tmp/lib --folder output
+	script/dbedia-wurfl-bybrand.pl --lib tmp/lib --folder ${WWW_FOLDER}
 
 # WURFL brands&models JSON
 ${WWW_FOLDER}/brandsModels.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
 	mkdir -p ${WWW_FOLDER}
-	script/dbedia-wurfl-brands-models.pl --lib tmp/lib > $@.tmp
-	mv $@.tmp $@
+	script/dbedia-wurfl-brands-models.pl --lib tmp/lib --folder ${WWW_FOLDER}
 
 # UAs and IDs
 ${WURFL_LIB_FOLDER}/IDs.pm: ${WURFL_XML}
@@ -47,4 +46,3 @@ clean:
 
 distclean:
 	rm -rf tmp/*
-	rm -rf output/*
