@@ -1,0 +1,18 @@
+Build.PL
+Changes
+etc/dbedia-WURFL.conf
+lib/dbedia/WURFL.pm
+MANIFEST			This list of files
+README
+script/dbedia-wurfl-brands-models.pl
+script/dbedia-wurfl-byid.pl
+script/filter.pl
+t/00_compile.t
+t/distribution.t
+t/fixme.t
+t/perlcritic.t
+t/perlcriticrc
+t/perltidy.conf
+t/pod-coverage.t
+t/pod-spell.t
+t/pod.t
