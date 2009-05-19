@@ -2,19 +2,28 @@
 TMP_LIB_FOLDER=tmp/lib
 WURFL_LIB_FOLDER=${TMP_LIB_FOLDER}/Mobile/Devices
 WURFL_XML=${WURFL_LIB_FOLDER}/wurfl.xml
-OUTPUT_FOLDER=output
+WWW_FOLDER=tmp/output
 
 # ALL
-all: ${WURFL_XML} ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm ${OUTPUT_FOLDER}/brandsModels.json ${OUTPUT_FOLDER}/IDs.json
+.PHONY: all
+all: ${WURFL_XML} ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm ${WWW_FOLDER}/brandsModels.json ${WWW_FOLDER}/IDs.json
+
+# install
+.PHONY: install
+install: all
+	mkdir -p ${DESTDIR}/var/www/dbedia/WURFL
+	cp -r ${WWW_FOLDER}/* ${DESTDIR}/var/www/dbedia/WURFL/
+	mkdir -p ${DESTDIR}/etc/dbedia/sites-available
+	cp etc/dbedia-WURFL.conf ${DESTDIR}/etc/dbedia/sites-available/
 
 # WURFL byID JSON
-${OUTPUT_FOLDER}/IDs.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
-	mkdir -p ${OUTPUT_FOLDER}
+${WWW_FOLDER}/IDs.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
+	mkdir -p ${WWW_FOLDER}
 	script/dbedia-wurfl-byid.pl --lib tmp/lib --folder output
 
 # WURFL brands&models JSON
-${OUTPUT_FOLDER}/brandsModels.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
-	mkdir -p ${OUTPUT_FOLDER}
+${WWW_FOLDER}/brandsModels.json: ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/generic.pm
+	mkdir -p ${WWW_FOLDER}
 	script/dbedia-wurfl-brands-models.pl --lib tmp/lib > $@.tmp
 	mv $@.tmp $@
 
