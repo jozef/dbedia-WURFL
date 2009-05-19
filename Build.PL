@@ -11,6 +11,8 @@ my $builder = Module::Build->new(
         'Test::More' => 0,
     },
     add_to_cleanup      => [ 'dbedia-WURFL-*' ],
+    create_readme       => 1,
+    sign                => 1,
 );
 
 $builder->create_build_script();
