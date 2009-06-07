@@ -11,8 +11,8 @@ all: ${WURFL_XML} ${WURFL_LIB_FOLDER}/IDs.pm ${WURFL_LIB_FOLDER}/byID/g/en/gener
 # install
 .PHONY: install
 install: all
-	mkdir -p ${DESTDIR}/var/www/dbedia/WURFL
-	cp -r ${WWW_FOLDER}/* ${DESTDIR}/var/www/dbedia/WURFL/
+	mkdir -p ${DESTDIR}/var/www/dbedia-WURFL
+	cp -r ${WWW_FOLDER}/* ${DESTDIR}/var/www/dbedia-WURFL/
 	mkdir -p ${DESTDIR}/etc/dbedia/sites-available
 	cp etc/dbedia-WURFL.conf ${DESTDIR}/etc/dbedia/sites-available/
 
