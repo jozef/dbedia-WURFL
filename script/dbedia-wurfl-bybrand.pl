@@ -62,7 +62,7 @@ sub main {
         next if not $model_name;
         
         # replace non-word characters by underscore
-        $model_name =~ s/\W+/_/g; 
+        $model_name =~ s/\W/_/g; 
         
         my $device_folder   = File::Spec->catdir($folder, 'byBrand', $brand_name, 'id');
         my $device_brand    = File::Spec->catdir($folder, 'byBrand', $brand_name, $model_name.'.json');
@@ -84,13 +84,14 @@ sub main {
                 my $cap_value = $device_json{$cap_name};
                 $device_json{$cap_name} = [ uniq (
                     @{$device_brand_json{$cap_name}},
-                    $cap_value,
+                    ($cap_value ne '' ? $cap_value : ()),
                 )];
             }
         }
         else {
             foreach my $cap_name (keys %device_json) {
-                $device_json{$cap_name} = [ $device_json{$cap_name} ];
+                my $cap_value = $device_json{$cap_name};
+                $device_json{$cap_name} = [ ($cap_value ne '' ? $cap_value : ()) ];
             }
         }
         write_file(
